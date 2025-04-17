@@ -1,0 +1,10 @@
+GET http://127.0.0.1:8000/user/
+
+
+### Get Settings
+PUT http://127.0.0.1:8000/user/
+Content-Type: application/json
+
+{
+    "font": "marwan"
+}
