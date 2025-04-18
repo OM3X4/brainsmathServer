@@ -51,3 +51,8 @@ class UserDataSerializer(serializers.ModelSerializer):
 
     def get_tests(self , obj):
         return TestSerializer(Test.objects.filter(user=obj).all() , many=True).data
+
+class LeaderboardEntitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "number" , "mode"]

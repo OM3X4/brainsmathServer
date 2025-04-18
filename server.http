@@ -1,3 +1,4 @@
+# return user data(default omar because there is no auth yet)
 GET http://127.0.0.1:8000/user/
 
 
@@ -6,5 +7,9 @@ PUT http://127.0.0.1:8000/user/
 Content-Type: application/json
 
 {
-    "font": "marwan"
+    "font": "omar"
 }
+
+### GET leaderboard
+GET http://127.0.0.1:8000/leaderboard/
+

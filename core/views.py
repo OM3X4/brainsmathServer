@@ -1,10 +1,10 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import UserDataSerializer , TestSerializer , SettingsSerializer
+from .serializers import UserDataSerializer , TestSerializer , SettingsSerializer , LeaderboardEntitySerializer
 from django.contrib.auth.models import User
 from rest_framework import status
 from .models import Settings , Test
+from django.db.models import Max
 
 
 # Create your views here.
@@ -30,3 +30,15 @@ def getUserSettings(request):
     data = Settings.objects.filter(user=user).first()
     serial = SettingsSerializer(data)
     return Response(serial.data , status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def getLeaderboard(request):
+    highest_qpm_per_user = (
+    Test.objects
+        .values("user")  # Group by user
+        .annotate(max_qpm=Max("qpm"))  # Get highest qpm for each user
+    )
+
+    serial = LeaderboardEntitySerializer(tests , many=True)
+    return Response(serial.data , status=status.HTTP_200_OK)
+
