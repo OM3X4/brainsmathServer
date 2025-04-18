@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Test , Settings
 from django.contrib.auth.models import User
 from collections import defaultdict
+import time
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,22 +24,34 @@ class UserDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username" , "date_joined" , "best_scores" , "font" , "theme" , "tests"]
+        fields = ["username" , "date_joined" , "best_scores" , "theme" , "font" , "tests"]
 
-    def get_best_scores(self , obj):
+    def get_best_scores(self, obj):
+
         result = defaultdict(lambda: defaultdict(dict))
-        times = [30 , 60 , 120 , 180]
-        questions = [5 , 10 , 15 , 25]
-        for time in times:
-            for i in range(5):
-                # result["time"][time][i + 1] = Test.objects.filter(user=obj , time=time , difficulty=i + 1).first()
-                test = Test.objects.order_by("-qpm").filter(user=obj , time=time , difficulty=i + 1).first()
-                result["time"][time][i + 1] = TestSerializer(test).data if test else None
-        for question in questions:
-            for i in range(5):
-                # result["questions"][question][i + 1] = Test.objects.filter(user=obj , number=question , difficulty=i + 1).first()
-                test = Test.objects.order_by("-qpm").filter(user=obj , number=question , difficulty=i + 1).first()
-                result["questions"][question][i + 1] = TestSerializer(test).data if test else None
+        tests = (
+            Test.objects.filter(user=obj)
+            .order_by("-qpm")
+        )
+        time_scores = {}
+        question_scores = {}
+
+        for test in tests:
+            if test.time and (test.time, test.difficulty) not in time_scores:
+                time_scores[(test.time, test.difficulty)] = test
+            if test.number and (test.number, test.difficulty) not in question_scores:
+                question_scores[(test.number, test.difficulty)] = test
+
+        for time in [30, 60, 120, 180]:
+            for i in range(1, 6):
+                test = time_scores.get((time, i))
+                result["time"][time][i] = TestSerializer(test).data if test else None
+
+        for question in [5, 10, 15, 25]:
+            for i in range(1, 6):
+                test = question_scores.get((question, i))
+                result["questions"][question][i] = TestSerializer(test).data if test else None
+
         return result
 
     def get_theme(self , obj):
@@ -50,7 +63,7 @@ class UserDataSerializer(serializers.ModelSerializer):
         return data.font
 
     def get_tests(self , obj):
-        return TestSerializer(Test.objects.filter(user=obj).all() , many=True).data
+        return TestSerializer(Test.objects.filter(user=obj).all()[:10] , many=True).data
 
 class LeaderboardEntitySerializer(serializers.ModelSerializer):
     class Meta:

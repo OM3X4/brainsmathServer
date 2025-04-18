@@ -25,6 +25,10 @@ def getUserData(request):
 
 
 @api_view(["GET"])
+def hi(request):
+    return Response("hi" , status=status.HTTP_200_OK)
+
+@api_view(["GET"])
 def getUserSettings(request):
     user =  User.objects.first()
     data = Settings.objects.filter(user=user).first()

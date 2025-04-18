@@ -15,8 +15,8 @@ class Test(models.Model):
     mode = models.CharField(max_length=10 , choices=mode_choices)
     difficulty = models.SmallIntegerField()
     creation = models.DateTimeField(auto_now_add=True)
-    number = models.IntegerField(null=True)
-    time = models.IntegerField(null=True) # in ms
+    number = models.IntegerField()
+    time = models.IntegerField() # in ms
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

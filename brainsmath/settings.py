@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-v8ta8lt^s(-j8@30wap5ab-%nrx57_4-l7q5@d)e#a5cv@te56
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -40,12 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    'silk',
     'core'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "silk.middleware.SilkyMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -80,14 +82,44 @@ WSGI_APPLICATION = 'brainsmath.wsgi.application'
 import dj_database_url
 import os
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',  # The database name (Supabase default)
+#         'USER': 'postgres.azjsmbofepqnxcqjvwwy',  # Your Supabase username
+#         'PASSWORD': '12OMAR_emad12',  # Your Supabase password
+#         'HOST': 'aws-0-us-east-2.pooler.supabase.com',  # The host of your Supabase database
+#         'PORT': '5432',  # Default PostgreSQL port
+#         'CONN_MAX_AGE': 600,
+#         'OPTIONS': {
+#             'sslmode': 'require',  # Required by Supabase for SSL connections
+#         },
+#     }
+# }
+import dj_database_url
+
+# databaseConfig = dj_database_url.config("DATA" , conn_max_age=600)
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DB_NAME'),
+#         'USER': os.getenv('DB_USER'),
+#         'PASSWORD': os.getenv('DB_PASSWORD'),
+#         'HOST': os.getenv('DB_HOST'),
+#         'PORT': os.getenv('DB_PORT', '5432'),
+#         'CONN_MAX_AGE': 600,
+#         'OPTIONS': {
+#             'sslmode': 'require',
+#         },
+#     }
+# }
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('postgresql://postgres:bGwPSpvxMiCvCIZaKkYSiivhAiYgycZz@yamabiko.proxy.rlwy.net:50206/railway'),
-        conn_max_age=600,
-        ssl_require=True  # This is important for Railway
-    )
+    'default': dj_database_url.config(default="postgresql://postgres:12OMAR_emad12@aws-0-us-east-2.pooler.supabase.com:5432/postgres", conn_max_age=600)
 }
+
+
 
 
 # Password validation
