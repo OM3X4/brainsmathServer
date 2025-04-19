@@ -1,10 +1,13 @@
 # return user data(default omar because there is no auth yet)
 GET http://127.0.0.1:8000/user/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1MDY2MzY1LCJpYXQiOjE3NDUwNjYwNjUsImp0aSI6IjZkN2Q1NDcwYTA3ZjQyYTQ5YTc0NDAxNGE4NGU0MWM4IiwidXNlcl9pZCI6NH0.wS556RUPdzIfxRKC-J38rdji45aW5plRZLuWgarnajM
 
 
 ### Get Settings
 PUT http://127.0.0.1:8000/user/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1MDY2MzY1LCJpYXQiOjE3NDUwNjYwNjUsImp0aSI6IjZkN2Q1NDcwYTA3ZjQyYTQ5YTc0NDAxNGE4NGU0MWM4IiwidXNlcl9pZCI6NH0.wS556RUPdzIfxRKC-J38rdji45aW5plRZLuWgarnajM
+
 
 {
     "font": "omar"
@@ -12,6 +15,41 @@ Content-Type: application/json
 
 ### GET leaderboard
 GET http://127.0.0.1:8000/leaderboard/
+
+### SUBMIT tests
+POST http://127.0.0.1:8000/test/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1MDY2MzY1LCJpYXQiOjE3NDUwNjYwNjUsImp0aSI6IjZkN2Q1NDcwYTA3ZjQyYTQ5YTc0NDAxNGE4NGU0MWM4IiwidXNlcl9pZCI6NH0.wS556RUPdzIfxRKC-J38rdji45aW5plRZLuWgarnajM
+
+
+{
+    "qpm": 750,
+    "raw": 140,
+    "accuracy": 90,
+    "number": 10,
+    "mode": "time",
+    "time": 60000,
+    "difficulty": 17
+}
+
+### LOGIN
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+    "username": "sara",
+    "password": "sara"
+}
+
+
+### REFRESHING
+POST http://127.0.0.1:8000/api/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NTE1MTc4OSwiaWF0IjoxNzQ1MDY1Mzg5LCJqdGkiOiIxMzMzYzU5NjU5Njc0MDM3YjcxMDI3YjYxMzFmMTIzOSIsInVzZXJfaWQiOjN9.stVB1aPZqwjrSA1kRkEHYiPVlcjXf2FB04bOwiXUWCo"
+}
+
 
 ###
 GET http://127.0.0.1:8000/hi/

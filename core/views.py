@@ -1,16 +1,18 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view , permission_classes
 from .serializers import UserDataSerializer , TestSerializer , SettingsSerializer , LeaderboardEntitySerializer
 from django.contrib.auth.models import User
 from rest_framework import status
 from .models import Settings , Test
 from django.db.models import Max
+from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
 @api_view(["GET" , "PUT"])
+@permission_classes([IsAuthenticated])
 def getUserData(request):
-    user =  User.objects.first()
+    user =  request.user
     settings = Settings.objects.filter(user=user).first()
 
     if request.method == "GET":
@@ -47,9 +49,12 @@ def getLeaderboard(request):
     return Response(serial.data, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def submitTest(request):
-    user = User.objects.first()
-    serializer = TestSerializer(data=request.data)
+    # TODO: replace this with `request.user` when you add authentication
+
+    user = request.user
+    serializer = TestSerializer(data=request.data , partial=True)
     if serializer.is_valid():
         serializer.save(user=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
