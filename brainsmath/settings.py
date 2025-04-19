@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-v8ta8lt^s(-j8@30wap5ab-%nrx57_4-l7q5@d)e#a5cv@te56
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1' , "brainsmathserver.railway.internal" , "brainsmathserver-production.up.railway.app"]
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     "rest_framework",
+    'corsheaders',
     'silk',
     'core'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "silk.middleware.SilkyMiddleware",
