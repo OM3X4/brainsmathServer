@@ -31,19 +31,23 @@ class UserDataSerializer(serializers.ModelSerializer):
         user = obj
         tests = Test.objects.filter(user=user).order_by("-creation")
 
-        test_dates = sorted(set([test.creation.date() for test in tests]))
+        test_dates = sorted(set([test.creation.date() for test in tests]) , reverse=False)
 
-        current_streak = 1
+        current_streak = 0
         longest_streak = 1
+        user_streak = 1
+        isFirstStreak = True
 
         for i in range(1, len(test_dates)):
             if (test_dates[i] - test_dates[i - 1]).days == 1:
-                current_streak += 1
+                user_streak += 1
+                if isFirstStreak: current_streak += 1
             else:
-                longest_streak = max(longest_streak, current_streak)
-                current_streak = 1
+                longest_streak = max(longest_streak, user_streak)
+                user_streak = 1
+                isFirstStreak = False
 
-        return longest_streak
+        return {"user_streak": user_streak , "longest_streak": longest_streak}
 
 
 
