@@ -116,7 +116,7 @@ import dj_database_url
 # }
 
 DATABASES = {
-    'default': dj_database_url.config(default="postgresql://postgres:12OMAR_emad12@aws-0-us-east-2.pooler.supabase.com:5432/postgres", conn_max_age=600)
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'), conn_max_age=600)
 }
 
 
