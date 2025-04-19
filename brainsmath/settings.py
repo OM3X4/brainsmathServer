@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-v8ta8lt^s(-j8@30wap5ab-%nrx57_4-l7q5@d)e#a5cv@te56
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1' , "brainsmathserver.railway.internal" , "brainsmathserver-production.up.railway.app"]
 
 
 # Application definition

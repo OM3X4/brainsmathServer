@@ -15,3 +15,5 @@ GET http://127.0.0.1:8000/leaderboard/
 
 ###
 GET http://127.0.0.1:8000/hi/
+###
+GET https://brainsmathserver-production.up.railway.apps:8000/hi/
