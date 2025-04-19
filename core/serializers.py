@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Test , Settings
 from django.contrib.auth.models import User
 from collections import defaultdict
-import time
+from datetime import timedelta
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,11 +20,33 @@ class UserDataSerializer(serializers.ModelSerializer):
     theme = serializers.SerializerMethodField()
     font = serializers.SerializerMethodField()
     tests = serializers.SerializerMethodField()
+    streak = serializers.SerializerMethodField()
 
 
     class Meta:
         model = User
-        fields = ["username" , "date_joined" , "best_scores" , "theme" , "font" , "tests"]
+        fields = ["username" , "streak" , "date_joined" , "best_scores" , "theme" , "font" , "tests"]
+
+    def get_streak(self, obj):
+        user = obj
+        tests = Test.objects.filter(user=user).order_by("-creation")
+
+        test_dates = sorted(set([test.creation.date() for test in tests]))
+
+        current_streak = 1
+        longest_streak = 1
+
+        for i in range(1, len(test_dates)):
+            if (test_dates[i] - test_dates[i - 1]).days == 1:
+                current_streak += 1
+            else:
+                longest_streak = max(longest_streak, current_streak)
+                current_streak = 1
+
+        return longest_streak
+
+
+
 
     def get_best_scores(self, obj):
 
@@ -44,7 +66,7 @@ class UserDataSerializer(serializers.ModelSerializer):
 
         for time in [30, 60, 120, 180]:
             for i in range(1, 6):
-                test = time_scores.get((time, i))
+                test = time_scores.get((time * 1000, i))
                 result["time"][time][i] = TestSerializer(test).data if test else None
 
         for question in [5, 10, 15, 25]:
