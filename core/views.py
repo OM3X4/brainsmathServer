@@ -37,12 +37,21 @@ def getUserSettings(request):
 
 @api_view(["GET"])
 def getLeaderboard(request):
-    highest_qpm_per_user = (
-    Test.objects
-        .values("user")  # Group by user
-        .annotate(max_qpm=Max("qpm"))  # Get highest qpm for each user
-    )
+    tests = Test.objects.filter(
+        mode="time", time=60000
+    ).order_by("user", "-qpm").distinct("user")
 
-    serial = LeaderboardEntitySerializer(tests , many=True)
-    return Response(serial.data , status=status.HTTP_200_OK)
+    sorted_tests = sorted(tests, key=lambda x: x.qpm, reverse=True)
+
+    serial = LeaderboardEntitySerializer(sorted_tests, many=True)
+    return Response(serial.data, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+def submitTest(request):
+    user = User.objects.first()
+    serializer = TestSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(user=user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

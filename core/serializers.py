@@ -94,4 +94,4 @@ class UserDataSerializer(serializers.ModelSerializer):
 class LeaderboardEntitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "number" , "mode"]
+        fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "number" , "mode" , "time"]
