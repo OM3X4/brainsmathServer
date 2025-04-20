@@ -55,3 +55,13 @@ Content-Type: application/json
 GET http://127.0.0.1:8000/hi/
 ###
 GET https://brainsmathserver-production.up.railway.app/hi/
+
+
+### LOGIN
+POST https://brainsmathserver-production.up.railway.app/api/token/
+Content-Type: application/json
+
+{
+    "username": "sara",
+    "password": "sara"
+}

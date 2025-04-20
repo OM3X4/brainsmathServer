@@ -9,8 +9,8 @@ class Test(models.Model):
     )
 
 
-    qpm = models.IntegerField()
-    raw = models.IntegerField()
+    qpm = models.FloatField()
+    raw = models.FloatField()
     accuracy = models.SmallIntegerField()
     mode = models.CharField(max_length=10 , choices=mode_choices)
     difficulty = models.SmallIntegerField()
