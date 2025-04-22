@@ -53,32 +53,46 @@ class UserDataSerializer(serializers.ModelSerializer):
 
 
     def get_best_scores(self, obj):
+        tests = Test.objects.filter(user=obj).order_by("-qpm")
 
-        result = defaultdict(lambda: defaultdict(dict))
-        tests = (
-            Test.objects.filter(user=obj)
-            .order_by("-qpm")
-        )
         time_scores = {}
         question_scores = {}
 
+        # Select the best test per (value, difficulty) combo
         for test in tests:
             if test.time and (test.time, test.difficulty) not in time_scores:
                 time_scores[(test.time, test.difficulty)] = test
             if test.number and (test.number, test.difficulty) not in question_scores:
                 question_scores[(test.number, test.difficulty)] = test
 
+        time_results = []
         for time in [30, 60, 120, 180]:
-            for i in range(1, 6):
-                test = time_scores.get((time * 1000, i))
-                result["time"][time][i] = TestSerializer(test).data if test else None
+            best_test = None
+            for difficulty in range(1, 6):
+                test = time_scores.get((time * 1000, difficulty))
+                if test and (not best_test or test.qpm > best_test.qpm):
+                    best_test = test
+            time_results.append({
+                "value": time,
+                "test": TestSerializer(best_test).data if best_test else None
+            })
 
-        for question in [5, 10, 15, 25]:
-            for i in range(1, 6):
-                test = question_scores.get((question, i))
-                result["questions"][question][i] = TestSerializer(test).data if test else None
+        question_results = []
+        for number in [5, 10, 15, 25]:
+            best_test = None
+            for difficulty in range(1, 6):
+                test = question_scores.get((number, difficulty))
+                if test and (not best_test or test.qpm > best_test.qpm):
+                    best_test = test
+            question_results.append({
+                "value": number,
+                "test": TestSerializer(best_test).data if best_test else None
+            })
 
-        return result
+        return {
+            "time": time_results,
+            "questions": question_results
+        }
 
     def get_theme(self , obj):
         data = Settings.objects.filter(user=obj).first()
@@ -95,9 +109,3 @@ class LeaderboardEntitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "number" , "mode" , "time"]
-
-
-class registerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["username" , "password" , "email"]
