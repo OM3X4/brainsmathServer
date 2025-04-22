@@ -107,9 +107,16 @@ class UserDataSerializer(serializers.ModelSerializer):
         return TestSerializer(Test.objects.filter(user=obj).all()[:10] , many=True).data
 
 class LeaderboardEntitySerializer(serializers.ModelSerializer):
+
+    username = serializers.SerializerMethodField()
+
+
     class Meta:
         model = Test
-        fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "number" , "mode" , "time"]
+        fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "username" , "number" , "mode" , "time"]
+
+    def get_username(self, instance):
+        return instance.user.username
 
 
 class registerSerializer(serializers.ModelSerializer):
