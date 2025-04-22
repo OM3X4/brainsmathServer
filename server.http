@@ -1,6 +1,7 @@
 # return user data(default omar because there is no auth yet)
 GET http://127.0.0.1:8000/user/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1MDY2MzY1LCJpYXQiOjE3NDUwNjYwNjUsImp0aSI6IjZkN2Q1NDcwYTA3ZjQyYTQ5YTc0NDAxNGE4NGU0MWM4IiwidXNlcl9pZCI6NH0.wS556RUPdzIfxRKC-J38rdji45aW5plRZLuWgarnajM
+Authorization: Bearer   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1MzYyOTc2LCJpYXQiOjE3NDUzNTU3NzYsImp0aSI6ImExM2NkODZlZDc0MTRkYWI5YWJiMTdhZTYyZWE4MDg2IiwidXNlcl9pZCI6MTN9.tDQ01qGl7y3JuGNJhajpFCaXwK_fdVsi-yB7lVSv0NM
+
 
 
 ### Get Settings
@@ -58,20 +59,20 @@ GET https://brainsmathserver-production.up.railway.app/hi/
 
 
 ### LOGIN
-POST https://brainsmathserver-production.up.railway.app/api/token/
+POST http://127.0.0.1:8000/api/token/
 Content-Type: application/json
 
 {
-    "username": "sara",
-    "password": "sara"
+    "username": "saass",
+    "password": "marwan"
 }
 
 ### Register
-POST https://brainsmathserver-production.up.railway.app/register/
+POST http://127.0.0.1:8000/register/
 Content-Type: application/json
 
 {
-    "username": "saas",
+    "username": "saass",
     "password": "marwan",
     "email": "marwan@omar.com"
 }

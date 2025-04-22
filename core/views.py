@@ -64,6 +64,7 @@ def submitTest(request):
 def register(request):
     serial = registerSerializer(data=request.data)
     if serial.is_valid():
-        serial.save()
+        user = serial.save()
+        Settings.objects.create(theme="discord" , font="ubuntu" , user=user)
         return Response(serial.data , status=status.HTTP_201_CREATED)
     return Response(serial.errors , status=status.HTTP_400_BAD_REQUEST)
