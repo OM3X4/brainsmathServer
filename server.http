@@ -67,12 +67,12 @@ Content-Type: application/json
 }
 
 ### Register
-POST https://brainsmathserver-production.up.railway.app/register/
+POST http://127.0.0.1:8000/register/
 Content-Type: application/json
 
 {
-    "username": "emad",
+    "username": "saas",
     "password": "marwan",
-    "email": "marwan@marwan.com"
+    "email": "marwan@omar.com"
 }
 
