@@ -67,7 +67,7 @@ Content-Type: application/json
 }
 
 ### Register
-POST http://127.0.0.1:8000/register/
+POST https://brainsmathserver-production.up.railway.app/register/
 Content-Type: application/json
 
 {
