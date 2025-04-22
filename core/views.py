@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view , permission_classes
-from .serializers import UserDataSerializer , TestSerializer , SettingsSerializer , LeaderboardEntitySerializer
+from .serializers import UserDataSerializer , TestSerializer , SettingsSerializer , LeaderboardEntitySerializer , registerSerializer
 from django.contrib.auth.models import User
 from rest_framework import status
 from .models import Settings , Test
@@ -60,3 +60,10 @@ def submitTest(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(["POST"])
+def register(request):
+    serial = registerSerializer(data=request.data)
+    if serial.is_valid():
+        serial.save()
+        return Response(serial.data , status=status.HTTP_201_CREATED)
+    return Response(serial.errors , status=status.HTTP_400_BAD_REQUEST)

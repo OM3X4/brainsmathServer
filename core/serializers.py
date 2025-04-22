@@ -95,3 +95,9 @@ class LeaderboardEntitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "number" , "mode" , "time"]
+
+
+class registerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["username" , "password" , "email"]
