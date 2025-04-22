@@ -3,6 +3,7 @@ from .models import Test , Settings
 from django.contrib.auth.models import User
 from collections import defaultdict
 from datetime import timedelta
+from django.contrib.auth.hashers import make_password
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -110,7 +111,14 @@ class LeaderboardEntitySerializer(serializers.ModelSerializer):
         model = Test
         fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "number" , "mode" , "time"]
 
+
 class registerSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ["username" , "password"]
+        fields = ['username', 'email', 'password']
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        return super().create(validated_data)

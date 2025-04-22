@@ -4,8 +4,8 @@ from .serializers import UserDataSerializer , TestSerializer , SettingsSerialize
 from django.contrib.auth.models import User
 from rest_framework import status
 from .models import Settings , Test
-from django.db.models import Max
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.hashers import make_password
 
 
 # Create your views here.
