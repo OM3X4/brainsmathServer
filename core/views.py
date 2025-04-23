@@ -50,10 +50,18 @@ def getLeaderboard(request):
         mode="time", time=60000
     ).order_by("user", "-qpm").distinct("user")
 
+    testsCount = Test.objects.filter(
+        mode="time", time=60000
+    ).order_by("user", "-qpm").distinct("user").count()
+
     sorted_tests = sorted(tests, key=lambda x: x.qpm, reverse=True)[offset:offset + limit]
 
     serial = LeaderboardEntitySerializer(sorted_tests, many=True)
-    return Response(serial.data, status=status.HTTP_200_OK)
+
+    return Response({
+        "results": serial.data,
+        "total_pages": testsCount // 50,
+    }, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
