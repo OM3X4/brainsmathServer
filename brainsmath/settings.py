@@ -94,7 +94,7 @@ DATABASES = {
 }
 
 
-print(os.getenv("DATABASE_URL"))
+
 
 
 
