@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from .models import Settings , Test
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.hashers import make_password
+import math
 
 
 # Create your views here.
@@ -60,7 +60,7 @@ def getLeaderboard(request):
 
     return Response({
         "results": serial.data,
-        "total_pages": testsCount // 50,
+        "total_pages": math.ceil(testsCount / 50),
     }, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
