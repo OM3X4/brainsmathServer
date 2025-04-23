@@ -39,11 +39,18 @@ def getUserSettings(request):
 
 @api_view(["GET"])
 def getLeaderboard(request):
+
+    page = int(request.GET.get("page" , 0))
+
+    limit = 50
+    offset = (page - 1) * limit
+
+
     tests = Test.objects.filter(
         mode="time", time=60000
     ).order_by("user", "-qpm").distinct("user")
 
-    sorted_tests = sorted(tests, key=lambda x: x.qpm, reverse=True)
+    sorted_tests = sorted(tests, key=lambda x: x.qpm, reverse=True)[offset:offset + limit]
 
     serial = LeaderboardEntitySerializer(sorted_tests, many=True)
     return Response(serial.data, status=status.HTTP_200_OK)
