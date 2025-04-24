@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import getUserData , getLeaderboard , hi , submitTest , register
+from .views import getUserData , getLeaderboard , hi , submitTest , register , getUserRank
 
 
 urlpatterns = [
@@ -8,5 +8,6 @@ urlpatterns = [
     path("hi/" , hi),
     path("test/" , submitTest),
     path("register/" , register),
+    path("userrank/" , getUserRank),
 
 ]

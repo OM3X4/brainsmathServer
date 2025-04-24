@@ -73,62 +73,54 @@ def getLeaderboard(request):
         columns = [col[0] for col in cursor.description]
         results = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+
     count = len(results)
     return Response({"results": results , "count": count})
 
-# @api_view(["GET"])
-# def getLeaderboard(request):
-#     page = int(request.GET.get("page", 1))  # Default to page 1 instead of 0
-#     limit = 50
-#     offset = (page - 1) * limit
 
-#     # Use a subquery to get the highest qpm test for each user
-#     from django.db.models import OuterRef, Subquery, Max, F
+@api_view(["GET"])
+def getUserRank(request):
+    user = request.GET.get("user")
 
-#     # Find the max qpm per user
-#     user_max_tests = Test.objects.filter(
-#         mode="time",
-#         time=60000,
-#         user=OuterRef('user')
-#     ).order_by('-qpm').values('id')[:1]
+    query = """
+        WITH result as (
+        SELECT
+            t.id,
+            t.qpm,
+            t.raw,
+            t.accuracy,
+            t.mode,
+            t.difficulty,
+            t.creation,
+            t.number,
+            t.time,
+            t.user_id,
+            u.username,
+            ROW_NUMBER() OVER (ORDER BY t.qpm DESC) AS index
+            FROM core_test t
+            JOIN auth_user u ON t.user_id = u.id
+            WHERE t.qpm = (
+                SELECT MAX(qpm)
+                FROM core_test
+                WHERE user_id = t.user_id
+            )
+        ORDER BY t.qpm DESC)
+        SELECT * FROM result
+        WHERE username = %s
+    """
 
-#     # Get the actual test records with those max qpm values
-#     tests = Test.objects.filter(
-#         id__in=Subquery(user_max_tests),
-#         mode="time",
-#         time=60000
-#     ).order_by('-qpm')
+    with connection.cursor() as cursor:
+        cursor.execute(query , [user])
+        columns = [col[0] for col in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-#     # Count total unique users with qualifying tests
-#     total_count = tests.count()
+    return Response({"result": results})
 
-#     # Add rank directly in the database query when possible
-#     # For PostgreSQL you can use window functions:
-#     from django.db.models.expressions import Window
-#     from django.db.models.functions import Rank
 
-#     if connection.vendor == 'postgresql':
-#         tests = tests.annotate(
-#             rank=Window(
-#                 expression=Rank(),
-#                 order_by=F('qpm').desc()
-#             )
-#         )
 
-#     # Paginate results
-#     paginated_tests = tests[offset:offset + limit]
 
-#     # Add ranks manually only if not using PostgreSQL
-#     if connection.vendor != 'postgresql':
-#         for idx, test in enumerate(paginated_tests):
-#             test.rank = offset + idx + 1
 
-#     serial = LeaderboardEntitySerializer(paginated_tests, many=True)
 
-    return Response({
-        "results": serial.data,
-        "total_pages": math.ceil(total_count / limit),
-    }, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
