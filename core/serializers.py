@@ -106,18 +106,17 @@ class UserDataSerializer(serializers.ModelSerializer):
     def get_tests(self , obj):
         return TestSerializer(Test.objects.filter(user=obj).all()[:10] , many=True).data
 
+
 class LeaderboardEntitySerializer(serializers.ModelSerializer):
-
     username = serializers.SerializerMethodField()
-
+    rank = serializers.IntegerField()  # Include rank field in serialization
 
     class Meta:
         model = Test
-        fields = ["qpm" , "raw" , "accuracy" , "creation" , "user" , "username" , "number" , "mode" , "time"]
+        fields = ["qpm", "raw", "accuracy", "creation", "user", "username", "number", "mode", "time", "rank"]
 
     def get_username(self, instance):
         return instance.user.username
-
 
 class registerSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

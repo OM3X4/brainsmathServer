@@ -15,7 +15,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 }
 
 ### GET leaderboard
-GET http://127.0.0.1:8000/leaderboard/
+GET http://127.0.0.1:8000/leaderboard/?page=1
 
 ### SUBMIT tests
 POST http://127.0.0.1:8000/test/
