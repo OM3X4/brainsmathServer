@@ -70,9 +70,8 @@ def getLeaderboard(request):
 
     with connection.cursor() as cursor:
         cursor.execute(query, [limit, offset])
-        # columns = [col[0] for col in cursor.description]
-        # results = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        results = cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
     count = len(results)
     return Response({"results": results , "count": count})
